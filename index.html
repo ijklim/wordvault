@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Vault</title>
+
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div id='root'></div>
+
+  <!-- Note: Switch 'development' to 'production.min' when code is ready to be deployed -->
+  <script src="https://unpkg.com/react@latest/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@latest/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@latest/babel.min.js" crossorigin="anonymous"></script>
+
+  <!--
+    React Bootstrap 4
+    • Ref: https://react-bootstrap.github.io/getting-started/introduction
+    • Ref: https://getbootstrap.com/docs/4.4/getting-started/introduction/
+  -->
+  <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin="anonymous"></script>
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+    crossorigin="anonymous"
+  />
+
+  <script src="./components/PageHeader.js" type="text/babel"></script>
+  <script src="./components/PageContent.js" type="text/babel"></script>
+  <script src="./components/PageFooter.js" type="text/babel"></script>
+  <script src="./components/ReactToastMessage.js" type="text/babel"></script>
+  <!-- <script src="./components/test.js" type="text/babel"></script> -->
+
+  <script type="text/babel">
+    class RootComponent extends React.Component {
+      constructor(props) {
+        super(props);
+      }
+
+      render() {
+        return (
+          <React.Fragment>
+            <PageHeader
+              appName={this.props.appName}
+              appVersion={this.props.appVersion}
+            />
+
+            <PageContent />
+
+            <PageFooter />
+          </React.Fragment>
+        );
+      }
+    }
+
+    // ========================================
+
+    const appName = "Word Vault";
+    const appVersion = "1.0.10";
+
+    ReactDOM.render(
+      <RootComponent
+        appName={appName}
+        appVersion={appVersion}
+      />,
+      document.getElementById('root')
+    );
+  </script>
+</body>
+</html>
