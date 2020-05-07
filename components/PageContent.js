@@ -3,8 +3,8 @@
  */
 class SearchBox extends React.Component {
   handleChange() {
-    // console.log('SearchBox::handleChange(): ' + this.refs.searchWord.value);
-    this.props.handleChange(this.refs.searchWord.value);
+    // console.log('SearchBox::handleChange(): ' + this.refs.inputSearchWord.value);
+    this.props.handleChange(this.refs.inputSearchWord.value);
   }
 
   render() {
@@ -14,7 +14,7 @@ class SearchBox extends React.Component {
           placeholder="Enter search word"
           onChange={() => this.handleChange()}
           onKeyPress={this.props.handleKeyPress}
-          ref="searchWord"
+          ref="inputSearchWord"
           type="text"
         />
         <ReactBootstrap.InputGroup.Append>
@@ -32,29 +32,19 @@ class SearchBox extends React.Component {
 }
 
 /**
- * Functional component: WordAccordion
+ * Functional component: WordAccordionItem
  *
  * Is a bootstrap Accordion component with a word and it's definitions
  *
  * @param {object} props
  */
-function WordAccordion(props) {
-  if (!props.wordDefinitions.length) {
-    // props.wordDefinitions is an empty array
-    // props.wordNotFound true indicates word is not found
-    if (props.wordNotFound) {
-      return (
-        <ReactBootstrap.Alert variant="danger" className="mt-3">
-          "{props.wordSearched}" is not a valid word!
-        </ReactBootstrap.Alert>
-      );
-    }
-
-    // Search has not been performed yet
+function WordAccordionItem(props) {
+  if (!props.definitions.length) {
+    // props.definitions is an empty array
     return null;
   }
 
-  const wordDefinitionListItems = props.wordDefinitions.map((definition, index) => {
+  const wordDefinitionListItems = props.definitions.map((definition, index) => {
     return (
       <ReactBootstrap.ListGroup.Item key={index}>
         {definition}
@@ -63,19 +53,19 @@ function WordAccordion(props) {
   });
 
   return (
-    <ReactBootstrap.Accordion defaultActiveKey="0" className="text-left mt-3">
+    <React.Fragment>
       <ReactBootstrap.Card>
-        <ReactBootstrap.Accordion.Toggle as="a" eventKey="0" className="text-left text-light btn-dark btn btn-lg">
-          Definition of "{props.wordSearched}"
+        <ReactBootstrap.Accordion.Toggle eventKey={props.activeKey} className="text-left text-light btn-dark btn btn-lg">
+          Definition of "{props.word}"
         </ReactBootstrap.Accordion.Toggle>
       </ReactBootstrap.Card>
 
-      <ReactBootstrap.Accordion.Collapse eventKey="0">
+      <ReactBootstrap.Accordion.Collapse eventKey={props.activeKey}>
         <ReactBootstrap.ListGroup>
           {wordDefinitionListItems}
         </ReactBootstrap.ListGroup>
       </ReactBootstrap.Accordion.Collapse>
-    </ReactBootstrap.Accordion>
+    </React.Fragment>
   );
 }
 
@@ -86,35 +76,62 @@ class PageContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchWord: '',
-      wordDefinitions: [],
-      wordNotFound: false,
+      keyOfActiveWordAccordionItem: 0,
+      inputSearchWord: '',            // Directly tracks the search input field
+      searchedAndWordNotFound: false, // Whether a search has been performed and the search word is invalid
       wordSearched: '',
-      words: [],
+      wordsHistory: [],
     };
   }
 
   /**
-   * Call api to find definition of searchWord
-   *
-   * @param {*} searchWord
+   * If word has been searched before, move it to the top of wordsHistory
    */
-  getWordDefinition(searchWord) {
-    // Reset to defaults
+  moveDuplicateToTheTop() {
+    const inputSearchWord = this.state.inputSearchWord;
+    const wordsHistoryWithoutSearchWord = this.state.wordsHistory.filter((word) => {
+      return inputSearchWord != word.word;
+    });
+
+    if (wordsHistoryWithoutSearchWord.length == this.state.wordsHistory.length) {
+      // Word is not in history
+      return false;
+    }
+
+    const wordInArray = this.state.wordsHistory.filter((word) => {
+      return inputSearchWord == word.word;
+    });
     this.setState({
-      wordDefinitions: [],
-      wordNotFound: false,
-      wordSearched: this.state.searchWord,
+      wordsHistory: [
+        ...wordsHistoryWithoutSearchWord,
+        ...wordInArray,
+      ],
+    });
+    return true;
+  }
+
+  /**
+   * Call api to find definition of this.state.inputSearchWord
+   * Add definition(s) to array this.state.wordsHistory if word is found
+   */
+  getInputSearchWordDefinition() {
+    if (this.moveDuplicateToTheTop()) {
+      return;
+    }
+
+    // Reset to defaults and wordSearched to the word being search (regardless of whether the word is valid)
+    this.setState({
+      searchedAndWordNotFound: false,
+      wordSearched: this.state.inputSearchWord,
     });
 
     // Toast message to indicate search is in progress
-    RTM.setMessage(`Searching for word '${this.state.searchWord}'...`);
+    RTM.setMessage(`Searching for word '${this.state.inputSearchWord}'...`);
 
-    const url = `https://api.ivan-lim.com/?a=dictionary&word=${searchWord}`;
+    const url = `https://api.ivan-lim.com/?a=dictionary&word=${this.state.inputSearchWord}`;
     fetch(url)
       .then(response => response.json())
       .then(json => {
-        // const wordDefinitions = [];
         const wordDefinitions = json.reduce((wordDefinitions, {shortdef}) => {
           // shortdef has content, word is found
           if (shortdef) return wordDefinitions.concat(shortdef);
@@ -125,24 +142,24 @@ class PageContent extends React.Component {
         const wordFound = (wordDefinitions.length > 0);
 
         if (wordFound) {
-          // Add to words array
-          const words = [
-            ...this.state.words,
+          // Only add to wordsHistory array if word is found (i.e. valid)
+          const wordsHistory = [
+            ...this.state.wordsHistory,
             {
-              word: this.state.searchWord,
               definitions: wordDefinitions,
+              word: this.state.inputSearchWord,
             },
           ];
 
           this.setState({
-            words,
+            keyOfActiveWordAccordionItem: (wordsHistory.length - 1),
+            wordsHistory,
           });
         }
 
         // Definitions found
         this.setState({
-          wordDefinitions,
-          wordNotFound: !wordFound,
+          searchedAndWordNotFound: !wordFound,
         });
       })
       .catch(error => {
@@ -159,9 +176,9 @@ class PageContent extends React.Component {
    *
    * @param {*} searchWord
    */
-  handleChange(searchWord) {
+  handleChange(inputSearchWord) {
     this.setState({
-      searchWord,
+      inputSearchWord,
     });
   }
 
@@ -169,7 +186,7 @@ class PageContent extends React.Component {
    * [Search] button is clicked
    */
   handleClickSearch() {
-    this.getWordDefinition(this.state.searchWord);
+    this.getInputSearchWordDefinition();
   }
 
   /**
@@ -178,7 +195,7 @@ class PageContent extends React.Component {
   handleKeyPress(target) {
     if (target.charCode == 13) {
       // Find defitions of the search word
-      this.getWordDefinition(this.state.searchWord);
+      this.getInputSearchWordDefinition();
 
       // Highlight text again for easy next input
       target.currentTarget.select();
@@ -186,21 +203,49 @@ class PageContent extends React.Component {
   }
 
   render() {
+    let elementAlertMessage = null;
+    if (this.state.searchedAndWordNotFound) {
+      // Invalid search word error message
+      elementAlertMessage = (
+        <ReactBootstrap.Alert variant="danger">
+          "{this.state.wordSearched}" is not a valid word!
+        </ReactBootstrap.Alert>
+      );
+    }
+
+    let elementAllWordsSearched = null;
+    if (this.state.wordsHistory.length) {
+      const wordAccordionItems = this.state.wordsHistory.slice().reverse().map((word, index) => {
+        return (
+          <WordAccordionItem
+            key={word.word}
+            activeKey={index}
+            definitions={word.definitions}
+            word={word.word}
+          />
+        );
+      });
+
+      elementAllWordsSearched = (
+        <ReactBootstrap.Accordion defaultActiveKey={this.state.keyOfActiveWordAccordionItem} className="text-left mt-3">
+          {wordAccordionItems}
+        </ReactBootstrap.Accordion>
+      );
+
+    }
+
     return (
       <ReactBootstrap.Container className="mt-5">
         <ReactBootstrap.Row>
           <ReactBootstrap.Col />
-          <ReactBootstrap.Col sm={10} md={8} lg={6} className="text-center p-3">
+          <ReactBootstrap.Col sm={10} lg={8} className="text-center p-3">
+            {elementAlertMessage}
             <SearchBox
               handleChange={(searchWord) => this.handleChange(searchWord)}
               handleClickSearch={() => this.handleClickSearch()}
               handleKeyPress={(target) => this.handleKeyPress(target)}
             />
-            <WordAccordion
-              wordDefinitions={this.state.wordDefinitions}
-              wordNotFound={this.state.wordNotFound}
-              wordSearched={this.state.wordSearched}
-            />
+            {elementAllWordsSearched}
           </ReactBootstrap.Col>
           <ReactBootstrap.Col />
         </ReactBootstrap.Row>
