@@ -3,7 +3,7 @@
  */
 class SearchBox extends React.Component {
   handleChange() {
-    // console.log('handling change: ' + this.refs.searchWord.value);
+    // console.log('SearchBox::handleChange(): ' + this.refs.searchWord.value);
     this.props.handleChange(this.refs.searchWord.value);
   }
 
@@ -32,14 +32,16 @@ class SearchBox extends React.Component {
 }
 
 /**
- * Functional component: ListOfWordDefinitions
+ * Functional component: WordAccordion
  *
- * @param {*} props
+ * Is a bootstrap Accordion component with a word and it's definitions
+ *
+ * @param {object} props
  */
-function ListOfWordDefinitions(props) {
-  // Nothing to display
+function WordAccordion(props) {
   if (!props.wordDefinitions.length) {
-    // Word is not found
+    // props.wordDefinitions is an empty array
+    // props.wordNotFound true indicates word is not found
     if (props.wordNotFound) {
       return (
         <ReactBootstrap.Alert variant="danger" className="mt-3">
@@ -54,31 +56,26 @@ function ListOfWordDefinitions(props) {
 
   const wordDefinitionListItems = props.wordDefinitions.map((definition, index) => {
     return (
-      <ReactBootstrap.ListGroup.Item key={index} className="text-left">
+      <ReactBootstrap.ListGroup.Item key={index}>
         {definition}
       </ReactBootstrap.ListGroup.Item>
     );
   });
 
-  const cardHeader =
-    props.wordDefinitions.length ?
-      (
-        <ReactBootstrap.Card.Header className="font-weight-bold">
-          Definition of "{props.wordSearched}"
-        </ReactBootstrap.Card.Header>
-      ) :
-      (
-        null
-      )
-    ;
-
   return (
-    <ReactBootstrap.Card className="mt-3">
-      {cardHeader}
-      <ReactBootstrap.ListGroup>
-        {wordDefinitionListItems}
-      </ReactBootstrap.ListGroup>
-    </ReactBootstrap.Card>
+    <ReactBootstrap.Accordion defaultActiveKey="0" className="text-left mt-3">
+      <ReactBootstrap.Card>
+        <ReactBootstrap.Accordion.Toggle as="a" eventKey="0" className="text-left text-light btn-dark btn btn-lg">
+          Definition of "{props.wordSearched}"
+        </ReactBootstrap.Accordion.Toggle>
+      </ReactBootstrap.Card>
+
+      <ReactBootstrap.Accordion.Collapse eventKey="0">
+        <ReactBootstrap.ListGroup>
+          {wordDefinitionListItems}
+        </ReactBootstrap.ListGroup>
+      </ReactBootstrap.Accordion.Collapse>
+    </ReactBootstrap.Accordion>
   );
 }
 
@@ -93,6 +90,7 @@ class PageContent extends React.Component {
       wordDefinitions: [],
       wordNotFound: false,
       wordSearched: '',
+      words: [],
     };
   }
 
@@ -110,7 +108,7 @@ class PageContent extends React.Component {
     });
 
     // Toast message to indicate search is in progress
-    RTM.setMessage(`Searching for word '${this.state.searchWord}...'`);
+    RTM.setMessage(`Searching for word '${this.state.searchWord}'...`);
 
     const url = `https://api.ivan-lim.com/?a=dictionary&word=${searchWord}`;
     fetch(url)
@@ -124,10 +122,27 @@ class PageContent extends React.Component {
           return wordDefinitions;
         }, []);
 
+        const wordFound = (wordDefinitions.length > 0);
+
+        if (wordFound) {
+          // Add to words array
+          const words = [
+            ...this.state.words,
+            {
+              word: this.state.searchWord,
+              definitions: wordDefinitions,
+            },
+          ];
+
+          this.setState({
+            words,
+          });
+        }
+
         // Definitions found
         this.setState({
-          wordNotFound: (wordDefinitions.length == 0),
           wordDefinitions,
+          wordNotFound: !wordFound,
         });
       })
       .catch(error => {
@@ -178,9 +193,10 @@ class PageContent extends React.Component {
           <ReactBootstrap.Col sm={10} md={8} lg={6} className="text-center p-3">
             <SearchBox
               handleChange={(searchWord) => this.handleChange(searchWord)}
+              handleClickSearch={() => this.handleClickSearch()}
               handleKeyPress={(target) => this.handleKeyPress(target)}
             />
-            <ListOfWordDefinitions
+            <WordAccordion
               wordDefinitions={this.state.wordDefinitions}
               wordNotFound={this.state.wordNotFound}
               wordSearched={this.state.wordSearched}
