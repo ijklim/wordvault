@@ -4,7 +4,7 @@ function PageHeader(props) {
       <ReactBootstrap.Navbar.Brand
         href="/"
         className="text-left"
-        style={{lineHeight: '1.2em'}}
+        style={{lineHeight:'1.2em'}}
       >
         {props.appName}<br />
         <small>v.{props.appVersion}</small>

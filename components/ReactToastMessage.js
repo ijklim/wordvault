@@ -27,7 +27,7 @@ class ReactToastMessage extends React.Component {
     return (
       <ReactBootstrap.Toast
         show={isVisible}
-        style={{position:'absolute', left:'10px', bottom:'10px', background:'#333', color:'white', width:'50%'}}
+        style={{position:'absolute', left:'10px', bottom:'10px', background:'rgba(75, 75, 75, .8)', color:'white', width:'300px'}}
       >
         <ReactBootstrap.Toast.Body>
           {this.state.message}

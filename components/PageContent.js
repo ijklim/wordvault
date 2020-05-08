@@ -55,12 +55,14 @@ function WordAccordionItem(props) {
   return (
     <React.Fragment>
       <ReactBootstrap.Card>
-        <ReactBootstrap.Accordion.Toggle eventKey={props.activeKey} className="text-left text-light btn-dark btn btn-lg">
+        <ReactBootstrap.Accordion.Toggle eventKey={props.eventKey} className="text-left text-light btn-dark btn btn-lg">
           Definition of "{props.word}"
         </ReactBootstrap.Accordion.Toggle>
       </ReactBootstrap.Card>
 
-      <ReactBootstrap.Accordion.Collapse eventKey={props.activeKey}>
+      <ReactBootstrap.Accordion.Collapse
+        eventKey={props.eventKey}
+      >
         <ReactBootstrap.ListGroup>
           {wordDefinitionListItems}
         </ReactBootstrap.ListGroup>
@@ -76,9 +78,9 @@ class PageContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      keyOfActiveWordAccordionItem: 0,
-      inputSearchWord: '',            // Directly tracks the search input field
-      searchedAndWordNotFound: false, // Whether a search has been performed and the search word is invalid
+      keyOfActiveWordAccordionItem: 0,  // Expand the first accordion item
+      inputSearchWord: '',              // Directly tracks the search input field
+      searchedAndWordNotFound: false,   // Whether a search has been performed and the search word is invalid
       wordSearched: '',
       wordsHistory: [],
     };
@@ -151,8 +153,12 @@ class PageContent extends React.Component {
             },
           ];
 
+          // Set array to blank first to force React to rerender the accordion to ensure the word is expanded
           this.setState({
-            keyOfActiveWordAccordionItem: (wordsHistory.length - 1),
+            wordsHistory: [],
+          });
+
+          this.setState({
             wordsHistory,
           });
         }
@@ -203,6 +209,7 @@ class PageContent extends React.Component {
   }
 
   render() {
+    // An alert div to show error message
     let elementAlertMessage = null;
     if (this.state.searchedAndWordNotFound) {
       // Invalid search word error message
@@ -213,21 +220,26 @@ class PageContent extends React.Component {
       );
     }
 
+    // An array of Bootstrap Cards, each one contains a word and it's definitions
     let elementAllWordsSearched = null;
     if (this.state.wordsHistory.length) {
       const wordAccordionItems = this.state.wordsHistory.slice().reverse().map((word, index) => {
         return (
           <WordAccordionItem
-            key={word.word}
-            activeKey={index}
             definitions={word.definitions}
+            eventKey={index}
+            key={word.word}
             word={word.word}
           />
         );
       });
 
       elementAllWordsSearched = (
-        <ReactBootstrap.Accordion defaultActiveKey={this.state.keyOfActiveWordAccordionItem} className="text-left mt-3">
+        <ReactBootstrap.Accordion
+          className="text-left mt-3"
+          defaultActiveKey={this.state.keyOfActiveWordAccordionItem}
+          ref="wordAccordion"
+        >
           {wordAccordionItems}
         </ReactBootstrap.Accordion>
       );
