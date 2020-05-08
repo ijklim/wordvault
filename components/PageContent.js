@@ -234,11 +234,15 @@ class PageContent extends React.Component {
 
     }
 
+    // Note: The negative value in minHeight is the height space occupied by header, footer, margins etc.
     return (
-      <ReactBootstrap.Container className="mt-5">
+      <ReactBootstrap.Container
+        className="mt-5"
+        style={{minHeight: 'calc(100vh - 210px)'}}
+      >
         <ReactBootstrap.Row>
           <ReactBootstrap.Col />
-          <ReactBootstrap.Col sm={10} lg={8} className="text-center p-3">
+          <ReactBootstrap.Col sm={10} lg={8} className="text-center">
             {elementAlertMessage}
             <SearchBox
               handleChange={(searchWord) => this.handleChange(searchWord)}
