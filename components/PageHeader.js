@@ -6,8 +6,7 @@ function PageHeader(props) {
         className="text-left"
         style={{lineHeight:'1.2em'}}
       >
-        {props.appName}<br />
-        <small>v.{props.appVersion}</small>
+        {props.appName}
       </ReactBootstrap.Navbar.Brand>
     </ReactBootstrap.Navbar>
   );

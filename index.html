@@ -45,12 +45,14 @@
           <React.Fragment>
             <PageHeader
               appName={this.props.appName}
-              appVersion={this.props.appVersion}
             />
 
             <PageContent />
 
-            <PageFooter />
+            <PageFooter
+              appName={this.props.appName}
+              appVersion={this.props.appVersion}
+            />
           </React.Fragment>
         );
       }
@@ -59,7 +61,7 @@
     // ========================================
 
     const appName = "Word Vault";
-    const appVersion = "1.0.19";
+    const appVersion = "1.0.20";
 
     ReactDOM.render(
       <RootComponent

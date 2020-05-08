@@ -250,7 +250,7 @@ class PageContent extends React.Component {
     return (
       <ReactBootstrap.Container
         className="mt-5"
-        style={{minHeight: 'calc(100vh - 210px)'}}
+        style={{minHeight: 'calc(100vh - 183px)'}}
       >
         <ReactBootstrap.Row>
           <ReactBootstrap.Col />
