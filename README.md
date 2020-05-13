@@ -26,3 +26,7 @@ A utility to search for word definitions.
 
 * Copy all files into `public_html` on the host
 * Ensure PHP version is set to 7.0 or above
+
+# Credits
+
+* Favicon created using [favicon-generator.org](https://www.favicon-generator.org)
