@@ -1,6 +1,11 @@
 /**
  * Component: SearchBox
  */
+
+// Starting eventKey for WordAccordionItem
+// Note: eventKey 0 seems to be causing problem since late May 2020
+const firstEventKeyOfWordAccordionItems = 1;
+
 class SearchBox extends React.Component {
   handleChange() {
     // console.log('SearchBox::handleChange(): ' + this.refs.inputSearchWord.value);
@@ -78,7 +83,7 @@ class PageContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      keyOfActiveWordAccordionItem: 0,  // Expand the first accordion item
+      keyOfActiveWordAccordionItem: firstEventKeyOfWordAccordionItems,     // Controls which word is expanded
       inputSearchWord: '',              // Directly tracks the search input field
       searchedAndWordNotFound: false,   // Whether a search has been performed and the search word is invalid
       wordSearched: '',
@@ -227,7 +232,7 @@ class PageContent extends React.Component {
         return (
           <WordAccordionItem
             definitions={word.definitions}
-            eventKey={index}
+            eventKey={index + firstEventKeyOfWordAccordionItems}
             key={word.word}
             word={word.word}
           />
