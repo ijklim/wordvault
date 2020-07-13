@@ -16,6 +16,7 @@ class SearchBox extends React.Component {
     return (
       <ReactBootstrap.InputGroup>
         <ReactBootstrap.FormControl
+          autoFocus="true"
           placeholder="Enter search word"
           onChange={() => this.handleChange()}
           onKeyPress={this.props.handleKeyPress}
