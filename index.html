@@ -1,92 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word Vault</title>
-
-  <!-- Favicons, generated on https://www.favicon-generator.org/ -->
-  <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="/images/android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-  <link rel="manifest" href="/manifest.json">
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png">
-  <meta name="theme-color" content="#ffffff">
-</head>
-<body>
-  <div id='root'></div>
-
-  <!-- Note: Switch 'development' to 'production.min' when code is ready to be deployed -->
-  <script src="https://unpkg.com/react@latest/umd/react.production.min.js" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@latest/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/babel-standalone@latest/babel.min.js" crossorigin="anonymous"></script>
-
-  <!--
-    React Bootstrap 4
-    • Ref: https://react-bootstrap.github.io/getting-started/introduction
-    • Ref: https://getbootstrap.com/docs/4.4/getting-started/introduction/
-  -->
-  <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin="anonymous"></script>
-  <link
-    rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-    crossorigin="anonymous"
-  />
-
-  <script src="./components/PageHeader.js" type="text/babel"></script>
-  <script src="./components/PageContent.js" type="text/babel"></script>
-  <script src="./components/PageFooter.js" type="text/babel"></script>
-  <script src="./components/ReactToastMessage.js" type="text/babel"></script>
-  <!-- <script src="./components/test.js" type="text/babel"></script> -->
-
-  <script type="text/babel">
-    class RootComponent extends React.Component {
-      constructor(props) {
-        super(props);
-      }
-
-      render() {
-        return (
-          <React.Fragment>
-            <PageHeader
-              appName={this.props.appName}
-            />
-
-            <PageContent />
-
-            <PageFooter
-              appName={this.props.appName}
-              appVersion={this.props.appVersion}
-            />
-          </React.Fragment>
-        );
-      }
-    }
-
-    // ========================================
-
-    const appName = "Word Vault";
-    const appVersion = "1.0.22";
-
-    ReactDOM.render(
-      <RootComponent
-        appName={appName}
-        appVersion={appVersion}
-      />,
-      document.getElementById('root')
-    );
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

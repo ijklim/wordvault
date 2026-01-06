@@ -1,32 +1,34 @@
 # Word Vault
 
-A utility to search for word definitions.
+A React + TypeScript + Vite application.
 
-<p align="center">
-  <a href="https://wordvault.ivan-lim.com" target="_blank">
-    <img src="https://github.com/ijklim/wordvault/blob/master/screenshot.png" width="909px">
-    <br>
-    Live Demo
-  </a>
-</p>
+## Getting Started
 
-## Technologies/Modules used
+### Prerequisites
 
-* React
-* ReactDOM
-* React-Bootstrap
-* Babel
+- Node.js (Latest LTS recommended)
+- pnpm
 
-## Features
+### Installation
 
-* A toaster plugin that is built with React. Does not require initialization or dependency injected into other components.
+```bash
+pnpm install
+```
 
+### Development
 
-# Deployment on shared hosting
+```bash
+pnpm dev
+```
 
-* Copy all files into `public_html` on the host
-* Ensure PHP version is set to 7.0 or above
+### Build
 
-# Credits
+```bash
+pnpm build
+```
 
-* Favicon created using [favicon-generator.org](https://www.favicon-generator.org)
+### Linting
+
+```bash
+pnpm lint
+```
