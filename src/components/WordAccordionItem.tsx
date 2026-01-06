@@ -15,7 +15,7 @@ function CustomToggle({ children, eventKey }: { children: React.ReactNode, event
 
   return (
     <div
-      className="text-left text-light btn-dark btn btn-lg btn-block"
+      className="text-left text-light btn-dark btn btn-lg w-100"
       onClick={decoratedOnClick}
     >
       {children}

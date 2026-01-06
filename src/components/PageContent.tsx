@@ -52,7 +52,7 @@ const PageContent = () => {
 
         setMessage(`Searching for word '${inputSearchWord}'...`);
 
-        const url = `https://api.ivan-lim.com/?a=dictionary&word=${inputSearchWord}`;
+        const url = `${import.meta.env.VITE_API_URL}/?a=dictionary&word=${inputSearchWord}`;
         fetch(url)
             .then(response => response.json())
             .then(json => {
@@ -133,8 +133,7 @@ const PageContent = () => {
 
     return (
         <Container
-            className="mt-5"
-            style={{ minHeight: 'calc(100vh - 183px)' }}
+            className="mt-5 flex-grow-1"
         >
             <Row>
                 <Col />

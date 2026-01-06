@@ -7,9 +7,9 @@ interface PageFooterProps {
 
 const PageFooter = ({ appName, appVersion }: PageFooterProps) => {
   return (
-    <Container fluid className="text-right mt-5 py-1 border-top">
+    <Container fluid className="mt-5 py-1 border-top">
       <Row>
-        <Col>
+        <Col className="text-end">
           <small>{appName} v.{appVersion}. Proudly brought to you by <a href="https://ivan-lim.com" target="_blank">Ivan Lim</a></small>
         </Col>
       </Row>

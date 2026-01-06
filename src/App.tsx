@@ -2,10 +2,15 @@ import PageHeader from './components/PageHeader';
 import PageContent from './components/PageContent';
 import PageFooter from './components/PageFooter';
 import { ToastProvider } from './context/ToastContext';
+import packageJson from '../package.json';
 
 function App() {
-  const appName = "Word Vault";
-  const appVersion = "1.0.22";
+  const appName = packageJson.name
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+  const appVersion = packageJson.version;
 
   return (
     <ToastProvider>
